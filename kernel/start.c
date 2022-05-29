@@ -35,6 +35,8 @@ void _start() {
 
     print_memory_layout();
 
+    printf("Hello, world!");
+
     while (1) {
     }
 }

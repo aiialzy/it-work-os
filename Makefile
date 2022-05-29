@@ -1,6 +1,5 @@
 BUILD := build
-SRC := src
-K := $(SRC)/kernel
+K := kernel
 
 LD_SCRIPT := $K/kernel.ld
 OUTPUT_KERNEL := $(BUILD)/kernel

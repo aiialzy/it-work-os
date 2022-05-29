@@ -1,2 +1,2 @@
 build
-src/kernel/*.o
+kernel/*.o
