@@ -6,7 +6,7 @@ main:
 	li		a2, 13
 	li		a7, 64
 	ecall
-	li 		a0, 1
+	li 		a0, 0
 	ret
 
 	.data
