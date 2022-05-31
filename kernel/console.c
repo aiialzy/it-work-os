@@ -1,4 +1,3 @@
-#include "types.h"
 #include "uart.c"
 
 void consoleputc(char c) {

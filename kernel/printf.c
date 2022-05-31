@@ -1,6 +1,5 @@
 #include <stdarg.h>
 #include "console.c"
-#include "types.h"
 #include "defs.h"
 
 static char digits[] = "0123456789ABCDEF";
@@ -15,18 +14,18 @@ static void printchar(int c) {
     consoleputc(c & 0xff);
 }
 
-static void printptr(uint64 ptr) {
+static void printptr(unsigned long ptr) {
     consoleputc('0');
     consoleputc('x');
-    for (int i = 0; i < (sizeof(uint64) * 2); i++, ptr <<= 4) {
-        consoleputc(digits[ptr >> (sizeof(uint64) * 8 - 4)]);
+    for (int i = 0; i < (sizeof(unsigned long) * 2); i++, ptr <<= 4) {
+        consoleputc(digits[ptr >> (sizeof(unsigned long) * 8 - 4)]);
     }
 }
 
 static void printint(int xx, int base, int sign) {
     char buf[16];
     int i;
-    uint x;
+    unsigned int x;
 
     if (sign && xx < 0) {
         x = -xx;
@@ -82,7 +81,7 @@ void vprintf(const char *fmt, va_list ap) {
                 printint(va_arg(ap, int), 16, 1);
                 break;
             case 'p':
-                printptr(va_arg(ap, uint64));
+                printptr(va_arg(ap, unsigned long));
                 break;
             case 'c':
                 printchar(va_arg(ap, int));

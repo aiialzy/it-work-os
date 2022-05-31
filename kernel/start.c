@@ -1,4 +1,3 @@
-#include "types.h"
 #include "defs.h"
 #include "log.c"
 
@@ -15,7 +14,7 @@ void ebss();
 
 void clear_bss() {
     for (void *p = &sbss; p < (void *)(&ebss); p++) {
-        *(byte *)p = 0;
+        *(unsigned char *)p = 0;
     }
 }
 

@@ -1,6 +1,5 @@
 #include "defs.h"
 #include "printf.c"
-#include "types.h"
 
 typedef struct {
     char* name;

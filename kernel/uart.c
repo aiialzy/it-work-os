@@ -1,8 +1,6 @@
-#include "types.h"
-
 #define UART0 0x10000000L
 
-#define Reg(reg) ((volatile uint8*)(UART0 + reg))
+#define Reg(reg) ((volatile unsigned char*)(UART0 + reg))
 
 #define RHR 0
 #define THR 0
@@ -25,8 +23,8 @@
 
 #define UART_TX_BUF_SIZE 32
 char uart_tx_buf[UART_TX_BUF_SIZE];
-uint64 uart_tx_w;
-uint64 uart_tx_r;
+unsigned long uart_tx_w;
+unsigned long uart_tx_r;
 
 void uartstart();
 
@@ -56,7 +54,7 @@ void uartstart() {
             return;
         }
 
-        int32 c = uart_tx_buf[uart_tx_r % UART_TX_BUF_SIZE];
+        int c = uart_tx_buf[uart_tx_r % UART_TX_BUF_SIZE];
         uart_tx_r += 1;
 
         WriteReg(THR, c);
