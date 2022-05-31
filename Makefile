@@ -75,3 +75,10 @@ clean:
 rundemo:
 	$(GCC) $(CFLAGS) demo/syscall.c -o start
 	$(QEMU_LINUX) start
+
+.PHONY: start
+start:
+	$(GCC) $(CFLAGS) -c user/start.c -o start.o
+	$(GCC) $(CFLAGS) -c user/hello_world.c -o main.o
+	$(LD) -T user/user.ld -o hello_world start.o main.o
+	$(QEMU_LINUX) hello_world
