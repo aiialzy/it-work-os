@@ -16,6 +16,7 @@ OBJCOPY := $(CROSS_COMPILE)objcopy
 NM := $(CROSS_COMPILE)nm
 
 QEMU := qemu-system-riscv64
+QEMU_LINUX := qemu-riscv64
 
 OBJS := \
 	$K/entry.o \
@@ -69,3 +70,8 @@ gdbclient:
 .PHONY: clean
 clean:
 	rm -f $K/*.o $(BUILD)/*
+
+.PHONY: rundemo
+rundemo:
+	$(GCC) $(CFLAGS) demo/syscall.c -o start
+	$(QEMU_LINUX) start
