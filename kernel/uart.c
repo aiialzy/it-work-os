@@ -1,3 +1,5 @@
+#include "uart.h"
+
 #define UART0 0x10000000L
 
 #define Reg(reg) ((volatile unsigned char*)(UART0 + reg))
@@ -26,7 +28,6 @@ char uart_tx_buf[UART_TX_BUF_SIZE];
 unsigned long uart_tx_w;
 unsigned long uart_tx_r;
 
-void uartstart();
 
 void uartinit() {
     WriteReg(IER, 0x00);

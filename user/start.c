@@ -1,4 +1,5 @@
 #include "syscall.h"
+#include "printf.h"
 
 extern int main();
 
@@ -15,7 +16,7 @@ long exit(long code) {
     return sys_exit(code);
 }
 
-int _start() {
+void start() {
     clear_bss();
-    return (int)exit((long)main());
+    exit((long)main());
 }

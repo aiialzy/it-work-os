@@ -1,0 +1,1 @@
+long strlen(char *s);

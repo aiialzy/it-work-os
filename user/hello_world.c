@@ -1,6 +1,7 @@
-#include "printf.c"
+#include "printf.h"
 
 int main() {
-    printf("听说很行\n");
+    printf("Hello, world\n");
+    printf("这样太玄学了%b\n", 1000000);
     return 0;
 }

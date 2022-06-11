@@ -1,12 +1,12 @@
-#include <stdarg.h>
-#include "syscall.c"
-
-#define STDOUT 1
+#include "syscall.h"
+#include "printf.h"
+#include "string.h"
 
 static char digits[] = "0123456789ABCDEF";
 
-static void puts(char *s) {
-    sys_write(STDOUT, s);
+void puts(char *s) {
+    unsigned long len = strlen(s);
+    sys_write(STDOUT, s, len);
 }
 
 void panic(char* s) {
@@ -17,9 +17,8 @@ void panic(char* s) {
         ;
 }
 
-static void putc(char c) {
-    char s[] = {c};
-    puts(s);
+void putc(char c) {
+    sys_write(STDOUT, &c, 1);
 }
 
 static void printstring(char* s) {
@@ -123,5 +122,3 @@ void printf(const char *fmt, ...) {
     vprintf(fmt, ap);
     va_end(ap);
 }
-
-void printfinit() {}

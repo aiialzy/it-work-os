@@ -1,5 +1,7 @@
 BUILD := build
 K := kernel
+U := user
+
 
 LD_SCRIPT := $K/kernel.ld
 OUTPUT_KERNEL := $(BUILD)/kernel
@@ -20,7 +22,34 @@ QEMU_LINUX := qemu-riscv64
 
 OBJS := \
 	$K/entry.o \
-	$K/start.o 
+	$K/start.o \
+	$K/link_app.o \
+	$K/main.o \
+	$K/log.o \
+	$K/trap.o \
+	$K/printf.o \
+	$K/uart.o \
+	$K/string.o \
+	$K/math.o \
+	$K/console.o \
+	$K/pretrap.o \
+	$K/batch.o \
+	$K/syscall.o
+
+
+BIN_OBJS := \
+	$U/hello_world.o \
+	$U/store_fault.o \
+	$U/power.o \
+	$U/priv_inst.o \
+	$U/priv_csr.o
+
+BIN_REQUIRED_OBJS := \
+	$U/start.o \
+	$U/string.o \
+	$U/printf.o \
+	$U/syscall.o \
+	$U/start_globl.o
 
 KERNEL_ENTRY_PA := 0x80000000
 
@@ -30,7 +59,7 @@ QEMUOPTS := -machine virt \
 	-nographic \
 	-device loader,file=$(OUTPUT_BIN),addr=$(KERNEL_ENTRY_PA)
 
-CFLAGS = -Wall -Werror -O -fno-omit-frame-pointer -ggdb
+CFLAGS = -O -fno-omit-frame-pointer -ggdb
 CFLAGS += -mabi=lp64d -march=rv64gc
 CFLAGS += -MD
 CFLAGS += -mcmodel=medany
@@ -42,10 +71,13 @@ GDBOPTS := -ex 'file $(OUTPUT_KERNEL)' \
 	-ex 'target remote localhost:1234'
 
 %.o : %.c
-	@$(GCC) -c $(CFLAGS) $< -o $@
+	@$(GCC) -Wall -Werror -c $(CFLAGS) $< -o $@
 
 %.o : %.s
 	@$(AS) -mabi=lp64d -march=rv64gc $< -o $@
+
+user/%.o : user/%.c
+	@$(GCC) -c $(CFLAGS) $< -o $@
 
 .PHONY: build
 build: $(OBJS)
@@ -55,11 +87,13 @@ build: $(OBJS)
 
 .PHONY: run
 run:
+	@make build-bin
 	@make build
 	$(QEMU) $(QEMUOPTS)
 
 .PHONY: gdbserver
 gdbserver:
+	@make build-bin
 	@make build
 	$(QEMU) $(QEMUOPTS) -s -S
 
@@ -69,7 +103,7 @@ gdbclient:
 
 .PHONY: clean
 clean:
-	rm -f $K/*.o $(BUILD)/*
+	rm -f $K/*.o $K/*.d $(BUILD)/* $U/*.o $U/*.d *.o *.d *.s
 
 .PHONY: rundemo
 rundemo:
@@ -79,6 +113,15 @@ rundemo:
 .PHONY: start
 start:
 	$(GCC) $(CFLAGS) -c user/start.c -o start.o
-	$(GCC) $(CFLAGS) -c user/hello_world.c -o main.o
+	$(GCC) $(CFLAGS) -c user/priv_csr.c -o main.o
 	$(LD) -T user/user.ld -o hello_world start.o main.o
 	$(QEMU_LINUX) hello_world
+
+.PHONY: build-bin
+build-bin: $(BIN_REQUIRED_OBJS) $(BIN_OBJS)
+	$(foreach obj,$(BIN_OBJS),\
+		$(LD) -T user/user.ld -o $(patsubst $U/%.o,$(BUILD)/%,$(obj)) $(BIN_REQUIRED_OBJS) $(obj); \
+	)
+	$(foreach obj,$(BIN_OBJS),\
+		$(OBJCOPY) --strip-all $(patsubst $U/%.o,$(BUILD)/%,$(obj)) -O binary $(patsubst $U/%.o,$(BUILD)/%.bin,$(obj)); \
+	)

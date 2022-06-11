@@ -1,13 +1,7 @@
-#include "defs.h"
-#include "printf.c"
+#include "log.h"
+#include "printf.h"
 
-typedef struct {
-    char* name;
-    char* sstyle;
-    char* estyle;
-}loglevel;
-
-void log(loglevel level, char* fmt, va_list ap) {
+void log(LogLevel level, char* fmt, va_list ap) {
     printf("%s[%s] ", level.sstyle, level.name);
     vprintf(fmt, ap);
     printf("%s\n", level.estyle);
@@ -16,7 +10,7 @@ void log(loglevel level, char* fmt, va_list ap) {
 void error(char* fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
-    loglevel level = {
+    LogLevel level = {
         name : "ERROR",
         sstyle : "\033[31m",
         estyle : "\033[0m",
@@ -28,7 +22,7 @@ void error(char* fmt, ...) {
 void warn(char* fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
-    loglevel level = {
+    LogLevel level = {
         name : "WARN ",
         sstyle : "\033[33m",
         estyle : "\033[0m",
@@ -40,7 +34,7 @@ void warn(char* fmt, ...) {
 void info(char* fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
-    loglevel level = {
+    LogLevel level = {
         name : "INFO ",
         sstyle : "\033[34m",
         estyle : "\033[0m",
@@ -52,7 +46,7 @@ void info(char* fmt, ...) {
 void debug(char* fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
-    loglevel level = {
+    LogLevel level = {
         name : "DEBUG",
         sstyle : "\033[32m",
         estyle : "\033[0m",
@@ -64,7 +58,7 @@ void debug(char* fmt, ...) {
 void trace(char* fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
-    loglevel level = {
+    LogLevel level = {
         name : "TRACE",
         sstyle : "\033[35m",
         estyle : "\033[0m",

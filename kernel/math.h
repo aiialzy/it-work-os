@@ -1,0 +1,1 @@
+long pow_l(long x, long y);
