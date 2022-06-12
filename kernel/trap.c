@@ -53,6 +53,7 @@ TrapContext *trap_handler(TrapContext *ctx) {
 
         default:
             error("未知错误");
+            error("scause: %b", scause);
             run_next_app();
             break;
     }

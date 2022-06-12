@@ -9,9 +9,9 @@ int main() {
     int pow[SIZE];
     unsigned long index = 0;
     pow[index] = 1;
-    for (unsigned long i = 0; i<=STEP; i++) {
-        unsigned int last = pow[index];
-        index = (index + 1) % MOD;
+    for (unsigned long i = 1; i<=STEP; i++) {
+        int last = pow[index];
+        index = (index + 1) % SIZE;
         pow[index] = last * P % MOD;
         if (i % 10000 == 0) {
             printf("%d^%d=%d(MOD %d)\n", P, i, pow[index], MOD);

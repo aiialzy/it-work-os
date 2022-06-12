@@ -1,3 +1,6 @@
 build
 kernel/*.o
+kernel/*.d
+user/*.o
+user/*.d
 .vscode
