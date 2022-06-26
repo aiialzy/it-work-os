@@ -52,7 +52,7 @@ func main() {
 		go handlerErr(errout)
 
 		if err := cmd.Start(); err != nil {
-			log.Fatalf("没跑起来: %v\n", err)
+			log.Fatalf("%v\n", err)
 		}
 		in := bufio.NewScanner(out)
 		for in.Scan() {
