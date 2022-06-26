@@ -38,11 +38,10 @@ OBJS := \
 
 
 BIN_OBJS := \
-	$U/hello_world.o \
-	$U/store_fault.o \
-	$U/power.o \
-	$U/priv_inst.o \
-	$U/priv_csr.o
+	$U/power3.o \
+	$U/power5.o \
+	$U/power7.o \
+	$U/sleep.o
 
 BIN_REQUIRED_OBJS := \
 	$U/start.o \
@@ -110,18 +109,10 @@ rundemo:
 	$(GCC) $(CFLAGS) demo/syscall.c -o start
 	$(QEMU_LINUX) start
 
-.PHONY: start
-start:
-	$(GCC) $(CFLAGS) -c user/start.c -o start.o
-	$(GCC) $(CFLAGS) -c user/priv_csr.c -o main.o
-	$(LD) -T user/user.ld -o hello_world start.o main.o
-	$(QEMU_LINUX) hello_world
-
 .PHONY: build-bin
 build-bin: $(BIN_REQUIRED_OBJS) $(BIN_OBJS)
-	$(foreach obj,$(BIN_OBJS),\
-		$(LD) -T user/user.ld -o $(patsubst $U/%.o,$(BUILD)/%,$(obj)) $(BIN_REQUIRED_OBJS) $(obj); \
-	)
+	go run user/build.go
+
 	$(foreach obj,$(BIN_OBJS),\
 		$(OBJCOPY) --strip-all $(patsubst $U/%.o,$(BUILD)/%,$(obj)) -O binary $(patsubst $U/%.o,$(BUILD)/%.bin,$(obj)); \
 	)

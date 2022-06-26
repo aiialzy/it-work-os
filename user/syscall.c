@@ -20,3 +20,13 @@ long sys_exit(long xstate) {
     long args[3] = {xstate, 0, 0};
     return sys_call(SYSCALL_EXIT, args);
 }
+
+long sys_yield() {
+    long args[3] = {0, 0, 0};
+    sys_call(SYSCALL_YIELD, args);
+}
+
+long sys_get_time() {
+    long args[3] = {0, 0, 0};
+    sys_call(SYSCALL_GET_TIME, args);
+}
